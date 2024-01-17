@@ -1,22 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import GoogleLogin from 'react-google-login';
+import {gapi} from 'gapi-script'
+import { useEffect } from 'react';
 
 function App() {
+  // const handleFailure = (result)=>{
+  //   alert(JSON.stringify(result));
+  // };
+
+  const clientId=process.env.REACT_APP_GOOGLE_CLIENT_ID
+  useEffect(()=>{
+    gapi.load("client:auth2", ()=>{
+      gapi.auth2.init({clientId:clientId})
+    })
+  },[])
+
+  const handleLogin = (googleData)=>{
+    console.log(googleData)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>React Google Login App</h1>
+        <div>
+          <GoogleLogin
+              clientId={clientId}
+              buttonText="Log in with Google"
+              onSuccess={handleLogin}
+              onFailure={handleLogin}
+              cookiePolicy={'single_host_origin'}
+          >
+          </GoogleLogin>
+        </div>
       </header>
     </div>
   );
